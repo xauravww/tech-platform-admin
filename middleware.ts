@@ -1,14 +1,11 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { decrypt } from './app/lib/auth'; 
-
-import { getCookie, getCookies, setCookie, deleteCookie, hasCookie } from 'cookies-next';
-
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   // Define public paths that don't require authentication
-  const publicPaths = ['', '/login', '/signup', '/services', '/products', '/research'];
+  const publicPaths = ['', '/login', '/signup'];
 
   // Get token from cookies
   const token = request.cookies.get('token')?.value;
@@ -47,9 +44,6 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/admin', 
-    '/services',
-    '/products',
-    '/research',
     '/((?!api|_next/static|_next/image|favicon.ico).*)', // Excludes static files
   ],
 };

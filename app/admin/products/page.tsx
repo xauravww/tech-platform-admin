@@ -130,7 +130,7 @@ export default function ProductManagement() {
         <h1 className="text-2xl font-bold text-black">Products Management</h1>
         <div className="flex gap-2">
           <Input
-            placeholder="Search products..."
+            placeholder="Search products by name..."
             onChange={(e) => handleSearch(e.target.value)}
             className="w-64"
             allowClear

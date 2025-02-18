@@ -10,6 +10,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [loading,setLoading] = useState(false)
   const router = useRouter();
   const { setToken } = useAuth();
 
@@ -20,6 +21,7 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
@@ -43,6 +45,8 @@ export default function LoginPage() {
       router.refresh();
     } catch (error: any) {
       setError(error.message);
+    }finally{
+      setLoading(false)
     }
   };
 
@@ -96,7 +100,7 @@ export default function LoginPage() {
             type="submit"
             className="w-full bg-white/20 text-white py-2 px-4 rounded hover:bg-white/30 transition-all duration-300"
           >
-            Login
+           {loading ? "Logging in..." : "Log In"}
           </button>
         </form>
 

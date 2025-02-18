@@ -1,6 +1,6 @@
 'use client';
 
-import { Table, Button, Modal, Form, Input, Space, Popconfirm, Select, Spin } from 'antd';
+import { Table, Button, Modal, Form, Input, Space, Popconfirm, Select, Spin, Tag } from 'antd';
 import { useState, useEffect, useMemo } from 'react';
 import toast from 'react-hot-toast';
 import { FiEdit, FiSearch, FiTrash2 } from 'react-icons/fi';
@@ -13,11 +13,13 @@ export default function UsersManagement() {
   const [editingId, setEditingId] = useState(null);
   const [form] = Form.useForm();
 
-  // Pagination and search state
+  // Pagination, search, and filter state
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [searchQuery, setSearchQuery] = useState('');
-  const [loading, setLoading] = useState(false)
+  const [userTypeFilter, setUserTypeFilter] = useState(''); // New state for userType filter
+  const [loading, setLoading] = useState(false);
+
   // Debounced search function (delay 500ms) using the "debounce" package
   const debouncedSearch = useMemo(
     () =>
@@ -35,7 +37,7 @@ export default function UsersManagement() {
     };
   }, [debouncedSearch]);
 
-  // Fetch users with pagination and search
+  // Fetch users with pagination, search, and filter by userType
   const fetchUsers = async () => {
     try {
       setLoading(true);
@@ -44,25 +46,28 @@ export default function UsersManagement() {
         page: currentPage.toString(),
         pageSize: pageSize.toString(),
       });
+
+      if (userTypeFilter) {
+        queryParams.append('userType', userTypeFilter); // Include userType filter in the query params
+      }
+
       const res = await fetch(`/api/users?${queryParams.toString()}`);
       const data = await res.json();
-      // console.log('users data', JSON.stringify(data));
 
-      // Expecting API response in { users, total } format.
       setUsers(data.users);
       setTotal(data.total);
     } catch (error) {
       toast.error('Failed to fetch users');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
-  // Refetch whenever page, pageSize, or search query changes.
+  // Refetch whenever page, pageSize, search query, or userTypeFilter changes.
   useEffect(() => {
     fetchUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, pageSize, searchQuery]);
+  }, [currentPage, pageSize, searchQuery, userTypeFilter]);
 
   // Handle search input changes using debounce.
   const handleSearchChange = (e: any) => {
@@ -120,7 +125,25 @@ export default function UsersManagement() {
       title: 'User Type',
       dataIndex: 'userType',
       key: 'userType',
-      render: (text: String) => <span>{text}</span>,
+      render: (text:String) => {
+        let color = '';
+
+        switch (text) {
+          case 's-admin':
+            color = 'red';
+            break;
+          case 'admin':
+            color = 'green';
+            break;
+          case 'user':
+            color = 'blue';
+            break;
+          default:
+            color = 'default';
+        }
+
+        return <Tag color={color}>{text}</Tag>;
+      },
     },
     {
       title: 'Actions',
@@ -155,17 +178,28 @@ export default function UsersManagement() {
 
   return (
     <div>
-      {/* Header with title, search bar and add user button */}
+      {/* Header with title, search bar, filter by user type, and add user button */}
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold text-black">Users Management</h1>
         <div className="flex items-center space-x-2">
           <Input
-            placeholder="Search users"
+            placeholder="Search by name..."
             onChange={handleSearchChange}
             allowClear
             style={{ width: 200 }}
             prefix={<FiSearch />}
           />
+          <Select
+            value={userTypeFilter}
+            onChange={setUserTypeFilter}
+            placeholder="Filter by User Type"
+            style={{ width: 200 }}
+          >
+            <Select.Option value="">All</Select.Option>
+            <Select.Option value="user">User</Select.Option>
+            <Select.Option value="admin">Admin</Select.Option>
+            <Select.Option value="s-admin">Super Admin</Select.Option>
+          </Select>
           <Button
             type="primary"
             onClick={() => {
@@ -179,26 +213,27 @@ export default function UsersManagement() {
           </Button>
         </div>
       </div>
+
       {loading ? (
         <Spin size="large" className="flex justify-center mt-10" />
-      ) : (<Table
-        columns={columns}
-        dataSource={users}
-        rowKey="_id"
-        pagination={{
-          current: currentPage,
-          pageSize,
-          total,
-          showSizeChanger: true,
-          onChange: (page, newPageSize) => {
-            setCurrentPage(page);
-            setPageSize(newPageSize);
-          },
-        }}
-        className="text-black"
-      />
+      ) : (
+        <Table
+          columns={columns}
+          dataSource={users}
+          rowKey="_id"
+          pagination={{
+            current: currentPage,
+            pageSize,
+            total,
+            showSizeChanger: true,
+            onChange: (page, newPageSize) => {
+              setCurrentPage(page);
+              setPageSize(newPageSize);
+            },
+          }}
+          className="text-black"
+        />
       )}
-
 
       <Modal
         title={editingId ? 'Edit User' : 'Add User'}
@@ -229,6 +264,7 @@ export default function UsersManagement() {
             <Select placeholder="Select a user type">
               <Select.Option value="user">User</Select.Option>
               <Select.Option value="admin">Admin</Select.Option>
+              <Select.Option value="s-admin">Super Admin</Select.Option>
             </Select>
           </Form.Item>
           <Form.Item>

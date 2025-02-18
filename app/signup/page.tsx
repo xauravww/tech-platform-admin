@@ -13,12 +13,14 @@ export default function SignupPage() {
   const router = useRouter();
   const { setToken } = useAuth();
   const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   const toggleVisibility = () => setVisible(!visible);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      setLoading(true)
       const response = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: {
@@ -42,6 +44,8 @@ export default function SignupPage() {
       router.refresh();
     } catch (error: any) {
       setError(error.message);
+    }finally{
+      setLoading(false)
     }
   };
 
@@ -94,7 +98,7 @@ export default function SignupPage() {
             type="submit"
             className="w-full bg-white/20 text-white py-2 px-4 rounded hover:bg-white/30 transition-all duration-300"
           >
-            Sign Up
+          {loading ? "Signing you up..." : "Sign Up"}
           </button>
         </form>
 

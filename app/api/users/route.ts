@@ -20,11 +20,17 @@ export async function GET(request: Request) {
     const page = parseInt(searchParams.get('page') || '1', 10);
     const pageSize = parseInt(searchParams.get('pageSize') || '10', 10);
     const search = searchParams.get('search') || '';
+    const userType = searchParams.get('userType'); // Get userType filter
 
     // Build query object; for example, search in email field
     const query: any = {};
+
     if (search) {
       query.email = { $regex: search, $options: 'i' };
+    }
+
+    if (userType) {
+      query.userType = userType; // Filter by userType if provided
     }
 
     // Get total matching users count for pagination purposes
@@ -33,7 +39,8 @@ export async function GET(request: Request) {
     // Fetch users with pagination (skip & limit) and exclude the password field
     const users = await UserModel.find(query, '-password')
       .skip((page - 1) * pageSize)
-      .limit(pageSize).lean();
+      .limit(pageSize)
+      .lean();
 
     // Map users into a safe format (password field is already excluded)
     const safeUsers: SafeUser[] | any = users.map(({ password, ...user }) => user);
@@ -44,6 +51,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 });
   }
 }
+
 
 export async function POST(request: Request) {
   try {

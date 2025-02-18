@@ -119,7 +119,7 @@ export default function ServicesManagement() {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold text-black">Services Management</h1>
         <div className="flex gap-2">
-          <Input allowClear placeholder="Search services..." prefix={<FiSearch />} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+          <Input allowClear placeholder="Search services by name..." prefix={<FiSearch />} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
           <Button className='bg-blue-500' type="primary" onClick={() => { setEditingId(null); form.resetFields(); setIsModalVisible(true); }}>
             Add Service
           </Button>
@@ -184,7 +184,7 @@ export default function ServicesManagement() {
                       <Select
                         mode="tags"
                         style={{ width: '100%' }}
-                        placeholder="Select technologies"
+                        placeholder="Add technologies"
                         // options={[
                         //   { label: 'React', value: 'react' },
                         //   { label: 'Node.js', value: 'node' },

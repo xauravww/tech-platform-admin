@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, Row, Col, Statistic } from 'antd';
+import { Card, Row, Col, Statistic, Spin } from 'antd';
 import { useEffect, useState } from 'react';
 
 export default function AdminDashboard() {
@@ -10,11 +10,13 @@ export default function AdminDashboard() {
     research: 0,
     services: 0,
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Fetch stats from your API endpoints
     const fetchStats = async () => {
       try {
+        setIsLoading(true);
         const [users, products, research, services] = await Promise.all([
           fetch('/api/users').then(res => res.json()),
           fetch('/api/products').then(res => res.json()),
@@ -30,6 +32,8 @@ export default function AdminDashboard() {
         });
       } catch (error) {
         console.error('Error fetching stats:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -38,29 +42,39 @@ export default function AdminDashboard() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">Dashboard Overview</h1>
-      <Row gutter={16}>
-        <Col span={6}>
-          <Card>
-            <Statistic title="Total Users" value={stats.users} />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic title="Total Products" value={stats.products} />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic title="Total Research" value={stats.research} />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic title="Total Services" value={stats.services} />
-          </Card>
-        </Col>
-      </Row>
+      {isLoading ? (<Spin size="large" className="flex justify-center mt-10" />) : (
+
+        <div>
+          <h1 className="text-2xl font-bold mb-6">Dashboard Overview</h1>
+          <Row gutter={16}>
+            <Col span={6}>
+              <Card>
+                <Statistic title="Total Users" value={stats.users} />
+              </Card>
+            </Col>
+            <Col span={6}>
+              <Card>
+                <Statistic title="Total Products" value={stats.products} />
+              </Card>
+            </Col>
+            <Col span={6}>
+              <Card>
+                <Statistic title="Total Research" value={stats.research} />
+              </Card>
+            </Col>
+            <Col span={6}>
+              <Card>
+                <Statistic title="Total Services" value={stats.services} />
+              </Card>
+            </Col>
+          </Row>
+        </div>
+        
+      )
+      
+      }
+
+
     </div>
   );
 }

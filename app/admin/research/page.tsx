@@ -125,7 +125,7 @@ export default function ResearchManagement() {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold text-black">Research Management</h1>
         <Input
-          placeholder="Search Research..."
+          placeholder="Search Researches by name..."
           prefix={<FiSearch />}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
