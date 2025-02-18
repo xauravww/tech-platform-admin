@@ -24,7 +24,9 @@ export default function RootLayout({
         <AuthProvider>
           <MobileWarning>
             <Navbar />
-            {children}
+            <div style={{ maxHeight: "calc(100vh - 65px )", minHeight: "calc(100vh - 65px )" }} className='overflow-y-scroll'>
+              {children}
+            </div>
           </MobileWarning>
         </AuthProvider>
       </body>
