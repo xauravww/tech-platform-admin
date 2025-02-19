@@ -17,7 +17,7 @@ export default function NotFoundPage() {
                 <p className="text-xl text-gray-300 mb-8">
                     Oops! The page you&apos;re looking for doesn&apos;t exist.
                 </p>
-                <Link href="/" className="text-lg text-blue-400 hover:text-blue-600 transition duration-300">
+                <Link prefetch={false} href="/" className="text-lg text-blue-400 hover:text-blue-600 transition duration-300">
                     Go Back to Home
                 </Link>
             </div>

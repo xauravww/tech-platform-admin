@@ -25,12 +25,14 @@ export default function Home() {
         </p>
         <div className="flex flex-col space-y-4">
           <Link
+            prefetch={false}
             href="/admin"
             className="block text-center py-3 px-4 rounded-md bg-blue-800 text-white hover:bg-blue-900 transition-all duration-300 shadow-md"
           >
             Go to Dashboard
           </Link>
           <Link
+            prefetch={false}
             href="http://localhost:3000"
             className="block text-center py-3 px-4 rounded-md bg-white/20 text-white hover:bg-white/30 transition-all duration-300 shadow-md"
           >
