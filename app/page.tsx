@@ -33,7 +33,7 @@ export default function Home() {
           </Link>
           <Link
             prefetch={false}
-            href="http://localhost:3000"
+            href={`${process.env.NEXT_PUBLIC_MAIN_WEBSITE_URL}`}
             className="block text-center py-3 px-4 rounded-md bg-white/20 text-white hover:bg-white/30 transition-all duration-300 shadow-md"
           >
             Main Website
