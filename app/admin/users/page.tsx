@@ -125,7 +125,7 @@ export default function UsersManagement() {
       title: 'User Type',
       dataIndex: 'userType',
       key: 'userType',
-      render: (text:String) => {
+      render: (text: String) => {
         let color = '';
 
         switch (text) {
@@ -214,8 +214,11 @@ export default function UsersManagement() {
         </div>
       </div>
 
+      {/* Show loading spinner centered */}
       {loading ? (
-        <Spin size="large" className="flex justify-center mt-10" />
+        <div style={{ height: 'calc(100vh - 100px)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Spin size="large" />
+        </div>
       ) : (
         <Table
           columns={columns}
@@ -232,14 +235,17 @@ export default function UsersManagement() {
             },
           }}
           className="text-black"
+          scroll={{ x: 'max-content' }}  // Prevent table layout shifting
         />
       )}
 
+      {/* Modal for adding/editing users */}
       <Modal
         title={editingId ? 'Edit User' : 'Add User'}
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={null}
+        width={600}  // Set fixed width to avoid layout shift
       >
         <Form form={form} onFinish={handleSubmit} layout="vertical">
           <Form.Item

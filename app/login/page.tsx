@@ -76,6 +76,7 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full p-2 border rounded bg-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50"
               required
+              placeholder='Enter your email'
             />
           </div>
           <div className="mb-6">
@@ -87,6 +88,7 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 className="custom-password-input w-full p-2 border rounded bg-white/30 text-white placeholder-white/70 focus:outline-none focus:bg-white/20"
                 required
+                placeholder='Enter your password'
               />
               <span
                 onClick={toggleVisibility}

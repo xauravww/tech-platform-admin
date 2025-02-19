@@ -45,7 +45,12 @@ export async function GET(request: Request) {
     // Map users into a safe format (password field is already excluded)
     const safeUsers: SafeUser[] | any = users.map(({ password, ...user }) => user);
 
-    return NextResponse.json({ users: safeUsers, total, page, pageSize });
+    const response = NextResponse.json({ users: safeUsers, total, page, pageSize });
+
+    // Prevent caching of the response
+    response.headers.set('Cache-Control', 'no-store');
+
+    return response;
   } catch (error) {
     console.error('Error fetching users:', error);
     return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 });
