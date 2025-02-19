@@ -51,7 +51,7 @@ export const Navbar = () => {
 
                         {menuOpen && (
                             <div className="absolute right-0 mt-2 w-40 bg-gray-800 border border-gray-700 rounded-lg shadow-lg z-10">
-                                F         {token ? (
+                                 {token ? (
                                     <>
                                         <Link
                                             prefetch={false}
